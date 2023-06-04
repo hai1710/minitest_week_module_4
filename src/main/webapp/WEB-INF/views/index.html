@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Article</title>
+    <style>
+        /* CSS cho bảng */
+        #list {
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        #list th, #list td {
+            border: 1px solid black;
+            padding: 8px;
+        }
+
+        #list th {
+            background-color: #f2f2f2;
+            font-weight: bold;
+        }
+
+        /* CSS cho cột Action */
+        .action-column {
+            width: 100px; /* Điều chỉnh kích thước của cột */
+        }
+
+        .action-buttons {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .action-buttons a, .action-buttons input[type="submit"] {
+            display: inline-block;
+            padding: 4px 8px; /* Điều chỉnh kích thước của nút */
+            text-align: center;
+            text-decoration: none;
+            background-color: #4CAF50;
+            color: white;
+            border-radius: 4px;
+        }
+
+        .action-buttons a:hover, .action-buttons input[type="submit"]:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+<h1>Article</h1>
+<p>
+    <a th:href="@{/create}" class="button">
+        Add new article
+    </a>
+</p>
+<div class="notify">
+    <div th:if="${success}">
+        <span th:text="${success}"></span>
+    </div>
+    <div th:if="${errorMessage}">
+        <span th:text="${errorMessage}"></span>
+    </div>
+</div>
+
+<table id="list">
+    <thead>
+    <tr>
+        <th>Title</th>
+        <th>Content</th>
+        <th>Created Date</th>
+        <th class="action-column">Action</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="article : ${articles}" th:object="${article}">
+        <td><a th:href="@{/{id}(id=${article.getId()})}" class="button"><span th:text="${article.title}"></span></a></td>
+        <td th:text="${article.getContent()}"></td>
+        <td th:text="${article.getCreated_date()}"></td>
+        <td class="action-column">
+            <div class="action-buttons">
+                <form th:action="@{/edit/{id}(id=${article.getId()})}" method="Get">
+                    <input type="hidden" th:name="id" th:value="${article.getId()}"/>
+                    <input type="submit" value="Edit"/>
+                </form>
+                <!--                <a th:href="@{/list/edit/{id}(id=${article.getId()})}">Edit</a>-->
+                <form th:action="@{/delete}" method="post">
+                    <input type="hidden" th:name="id" th:value="${article.getId()}"/>
+                    <input type="submit" value="Delete"/>
+                </form>
+            </div>
+        </td>
+    </tr>
+    </tbody>
+</table>
+</body>
+</html>
